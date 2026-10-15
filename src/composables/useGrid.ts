@@ -1,3 +1,4 @@
+import { inject } from "vue";
 import { colorSchemeLight, GROUP_AUTO_COLUMN_ID, themeQuartz } from "ag-grid-community";
 import type {
   Column,
@@ -6,13 +7,15 @@ import type {
   RowDataUpdated,
   GetRowId,
 } from "@types";
-import { useTreeStore } from "@composables";
+import { treeStoreKey } from "@composables";
 
 /**
  * Параметры настройки таблицы просто взяты из документации.
  */
 export const useGrid = () => {
-  const { getChildren } = useTreeStore();
+  const treeStore = inject(treeStoreKey);
+  if (!treeStore) throw new Error("Хранилище не было инициализировано");
+  const { getChildren } = treeStore;
 
   // https://www.ag-grid.com/vue-data-grid/theming-theme-builder/#exporting-themes
   const theme = themeQuartz.withPart(colorSchemeLight).withParams({

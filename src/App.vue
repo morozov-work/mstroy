@@ -5,12 +5,14 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, ref } from "vue";
+import { onMounted, ref, provide } from "vue";
 import TreeTable from "@components/TreeTable.vue";
-import { useTreeStore } from "@composables";
+import { useTreeStore, treeStoreKey } from "@composables";
 import { loadItems } from "@api";
 
-const { rows, setItems } = useTreeStore();
+const treeStore = useTreeStore();
+provide(treeStoreKey, treeStore);
+const { rows, setItems } = treeStore;
 const isLoading = ref<boolean>(true);
 
 onMounted(async () => {
