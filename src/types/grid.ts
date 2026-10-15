@@ -11,7 +11,7 @@ export interface IGridTreeRow {
   item: ITreeItem;
   rowId: string;
   parentId: string | null;
-};
+}
 
 export type Column = ColDef<IGridTreeRow>;
 export type AutoGroupColumn = AutoGroupColumnDef<IGridTreeRow>;

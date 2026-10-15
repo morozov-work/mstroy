@@ -1,5 +1,8 @@
-import { inject } from "vue";
-import { colorSchemeLight, GROUP_AUTO_COLUMN_ID, themeQuartz } from "ag-grid-community";
+import {
+  colorSchemeLight,
+  GROUP_AUTO_COLUMN_ID,
+  themeQuartz,
+} from "ag-grid-community";
 import type {
   Column,
   AutoGroupColumn,
@@ -7,30 +10,21 @@ import type {
   RowDataUpdated,
   GetRowId,
 } from "@types";
-import { treeStoreKey } from "@composables";
 
 /**
  * Параметры настройки таблицы просто взяты из документации.
  */
 export const useGrid = () => {
-  const treeStore = inject(treeStoreKey);
-  if (!treeStore) throw new Error("Хранилище не было инициализировано");
-  const { getChildren } = treeStore;
+  const labels = {
+    count: "№ п/п",
+    name: "Наименование",
+    category: "Категория",
+    group: "Группа",
+    element: "Элемент",
+  };
 
   // https://www.ag-grid.com/vue-data-grid/theming-theme-builder/#exporting-themes
-  const theme = themeQuartz.withPart(colorSchemeLight).withParams({
-    backgroundColor: "#ffffff",
-    foregroundColor: "#1f2937",
-    headerBackgroundColor: "#f3f4f6",
-    headerTextColor: "#374151",
-    borderColor: "#e5e7eb",
-    fontSize: 14,
-    headerFontWeight: 600,
-    cellHorizontalPadding: 12,
-    rowHeight: 40,
-    headerHeight: 44,
-    wrapperBorderRadius: 8,
-  });
+  const theme = themeQuartz.withPart(colorSchemeLight);
 
   // https://www.ag-grid.com/vue-data-grid/column-properties/#reference-columnGroups
   const defaultColDef: Column = {
@@ -47,21 +41,24 @@ export const useGrid = () => {
   const columnDefs: Column[] = [
     {
       colId: "rowNumber",
-      headerName: "№ п/п",
-      width: 90,
-      minWidth: 90,
-      maxWidth: 90,
+      headerName: labels.count,
+      width: 80,
+      minWidth: 80,
+      maxWidth: 80,
       lockPosition: "left",
-      cellStyle: { textAlign: "center" },
+      cellStyle: { textAlign: "left", fontWeight: "bold" },
       valueGetter: ({ node }) =>
         node?.rowIndex == null ? "" : node.rowIndex + 1,
     },
     {
       colId: "label",
-      headerName: "Наименование",
+      headerName: labels.name,
       lockPosition: "right",
-      minWidth: 280,
+      minWidth: 200,
       flex: 1,
+      cellStyle: (params) => ({
+        fontWeight: params.node.group ? "bold" : "normal",
+      }),
       valueGetter: ({ data }) => {
         const label = data?.item.label;
         return typeof label === "string" ? label : "";
@@ -71,27 +68,28 @@ export const useGrid = () => {
 
   // https://www.ag-grid.com/vue-data-grid/grid-options/#reference-rowGrouping-autoGroupColumnDef
   const autoGroupColumnDef: AutoGroupColumn = {
-    headerName: "Категория",
+    headerName: labels.category,
     lockPosition: false,
-    minWidth: 220,
-    width: 260,
+    minWidth: 200,
+    width: 400,
     cellRenderer: "agGroupCellRenderer",
     cellRendererParams: { suppressCount: true },
-    valueGetter: ({ data }) => {
-      if (!data) return "";
-      return getChildren(data.item.id).length > 0 ? "Группа" : "Элемент";
-    },
+    cellStyle: (params) => ({
+      fontWeight: params.node.group ? "bold" : "normal",
+    }),
+    valueGetter: (params) =>
+      params.node?.group ? labels.group : labels.element,
   };
 
   // https://www.ag-grid.com/vue-data-grid/grid-events/#reference-gridLifecycle-modelUpdated
   const onModelUpdated: ModelUpdated = ({ api }) => {
     api.refreshCells({ columns: ["rowNumber"] });
-  }
+  };
 
   // https://www.ag-grid.com/vue-data-grid/grid-events/#reference-clientRowModel-rowDataUpdated
   const onRowDataUpdated: RowDataUpdated = ({ api }) => {
     api.refreshCells({ columns: [GROUP_AUTO_COLUMN_ID] });
-  }
+  };
 
   // https://www.ag-grid.com/vue-data-grid/grid-options/#reference-rowModels-getRowId
   const getRowId: GetRowId = ({ data }) => data.rowId;

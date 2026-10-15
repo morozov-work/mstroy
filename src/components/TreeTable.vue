@@ -35,7 +35,7 @@ const {
   autoGroupColumnDef,
   onModelUpdated,
   onRowDataUpdated,
-  getRowId
+  getRowId,
 } = useGrid();
 
 const rowId = (id: TreeId): string => {

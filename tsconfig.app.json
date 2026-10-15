@@ -16,8 +16,8 @@
       "@components/*": ["./src/components/*"],
       "@composables": ["./src/composables/index.ts"],
       "@types": ["./src/types/index.ts"],
-      "@api": ["./src/api/index.ts"],
-    },
+      "@api": ["./src/api/index.ts"]
+    }
   },
-  "include": ["src/**/*.ts", "src/**/*.tsx", "src/**/*.vue", "tests/**/*.ts"],
+  "include": ["src/**/*.ts", "src/**/*.tsx", "src/**/*.vue", "tests/**/*.ts"]
 }

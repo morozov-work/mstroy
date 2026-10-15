@@ -1,4 +1,4 @@
-import type { ITreeItem } from '@types';
+import type { ITreeItem } from "@types";
 
 const baseUrl = import.meta.env.BASE_URL;
 
@@ -13,5 +13,5 @@ const mockApi = async <T>(path: string): Promise<T> => {
 
 // Метод загрузки элементов дерева.
 export const loadItems = (): Promise<ITreeItem[]> => {
-  return mockApi<ITreeItem[]>('items.json');
+  return mockApi<ITreeItem[]>("items.json");
 };
