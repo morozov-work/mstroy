@@ -1,6 +1,5 @@
 <template>
   <AgGridVue
-    class="tree-table"
     :theme="theme"
     :row-data="gridRows"
     :loading="loading"
@@ -11,7 +10,7 @@
     :tree-data="true"
     :group-default-expanded="-1"
     tree-data-parent-id-field="parentId"
-    row-model-type="clientSide"
+    class="tree-table"
     @model-updated="onModelUpdated"
     @row-data-updated="onRowDataUpdated"
   />
